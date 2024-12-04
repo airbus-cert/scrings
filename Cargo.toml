@@ -1,0 +1,32 @@
+[package]
+name = "scrings"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+name = "scrings"
+path = "src/lib.rs"
+
+[[bin]]
+name = "scrings"
+path = "src/bin/scrings.rs"
+required-features = ["scrings"]
+
+[features]
+# The reason we do this is because doctests don't get cfg(test)
+# See: https://github.com/rust-lang/cargo/issues/4669
+integration = []
+scrings = ["clap"]
+
+[dependencies]
+tree-sitter = "0.24.4"
+tree-sitter-powershell = "0.24.4"
+tree-sitter-bash = "0.21.0"
+tree-sitter-python = "0.21.0"
+tree-sitter-sequel = "0.3.2"
+tree-sitter-javascript = "0.23.1"
+tree-sitter-php = "0.23.11"
+clap = { version = "^2.33", optional = true}
+encode_unicode = "1.0.0"
+tree-sitter-traversal = { git = "https://github.com/airbus-cert/tree-sitter-traversal", tag = "v0.1.4"}
+itertools = "0.13.0"
