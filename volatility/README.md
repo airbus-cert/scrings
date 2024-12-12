@@ -24,6 +24,7 @@ git clone https://github.com/airbus-cert/scrings
 
 vol -f [PATH_MEMORY_DUMP] -p scrings\volatility scrings.ScringsScan -l powershell
 
+Offset            Value
 0x2f34f783c14     '$O7u9q=85;$bhRIHw=84;$m5Z=70;$GMxNlj=56;$CET0e4=71;$Bn8j=101;$Y8X...'
 
 ```
@@ -39,5 +40,6 @@ git clone https://github.com/airbus-cert/scrings
 
 vol -f [PATH_MEMORY_DUMP] -p scrings\volatility scrings.VadScringsScan -l powershell
 
+Offset          PID      Value
 0x2f34f783c14   3632    '$O7u9q=85;$bhRIHw=84;$m5Z=70;$GMxNlj=56;$CET0e4=71;$Bn8j=101;$Y8X...'
 ```
