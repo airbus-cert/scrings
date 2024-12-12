@@ -33,7 +33,7 @@ vol -f [PATH_MEMORY_DUMP] -p scrings\volatility scrings.ScringsScan -l powershel
 By default it will scan all processes, but it's possible to specify a PID through `--pid` argument. 
 
 ```
-git clone 
+git clone https://github.com/airbus-cert/scrings
 
 vol -f [PATH_MEMORY_DUMP] -p scrings\volatility scrings.VadScringsScan -l powershell
 
