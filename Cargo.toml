@@ -6,6 +6,7 @@ license = "MIT"
 repository = "https://github.com/airbus-cert/scrings"
 authors = ["Airbus CERT"]
 readme = "README.md"
+description = "Semantic strings based on tree-sitter"
 
 [lib]
 name = "scrings"
