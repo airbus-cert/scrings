@@ -28,5 +28,5 @@ tree-sitter-javascript = "0.23.1"
 tree-sitter-php = "0.23.11"
 clap = { version = "^2.33", optional = true}
 encode_unicode = "1.0.0"
-tree-sitter-traversal = { git = "https://github.com/airbus-cert/tree-sitter-traversal", tag = "v0.1.4"}
+tree-sitter-traversal2 = "0.2.0"
 itertools = "0.13.0"
