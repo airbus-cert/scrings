@@ -27,7 +27,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.x'
+          python-version: '3.12'
           
       # Install Nightly Rust toolchain
       - uses: CERT/setup-rust@ee9ecd55933a4ecc86043ab63feb8e0602ae319e
