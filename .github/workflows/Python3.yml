@@ -27,7 +27,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v2
         with:
-          python-version: '3.13'
+          python-version: '3.x'
           
       # Install Nightly Rust toolchain
       - uses: CERT/setup-rust@ee9ecd55933a4ecc86043ab63feb8e0602ae319e
@@ -41,7 +41,7 @@ jobs:
       # Build backage
       - name: Build backage
         working-directory: ./pyscrings
-        run: maturin build
+        run: maturin build --profile release
 
       - name: Push python package to s3
         uses: CERT/s3-sync-action@7ed8b112447abb09f1da74f3466e4194fc7a6311
