@@ -15,7 +15,7 @@ try:
 
 except ImportError:
     vollog.info(
-        "Unable to find pyscrings"
+        "Unable to find pyscrings:\n\tpip install pyscrings"
     )
     raise
 
