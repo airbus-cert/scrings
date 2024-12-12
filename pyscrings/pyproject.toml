@@ -11,5 +11,8 @@ classifiers = [
     "Programming Language :: Python :: Implementation :: PyPy",
 ]
 dynamic = ["version"]
+description = "Semantic strings based on tree-sitter"
+readme = "README.md"
+
 [tool.maturin]
 features = ["pyo3/extension-module"]
