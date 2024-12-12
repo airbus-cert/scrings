@@ -1,7 +1,7 @@
 use tree_sitter::{Node as TreeNode, Tree as TreeSitter};
 use crate::rule::{Rule};
 use crate::error::{Result};
-use tree_sitter_traversal::{traverse, Order};
+use tree_sitter_traversal2::{traverse, Order};
 
 /// A node view use to explore the tree
 /// without mutability
