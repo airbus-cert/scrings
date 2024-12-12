@@ -2,7 +2,7 @@
 
 Semantic scanner based on [`tree-sitter`](https://tree-sitter.github.io/tree-sitter/)
 
-`scrings` will find semantically valid script parts in  a flat file (like a memory dump).
+`scrings` is a strings utility that will output only semantically valid strings based on tree-sitter grammar. For each script language we made a list of semantic nodes discriminant enough to detect the target language.
 
 Python bindings are available in the `pyscrings` package.
 
