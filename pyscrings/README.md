@@ -2,6 +2,17 @@
 
 Python bindings for `scrings` powered by PyO3 and maturin
 
+`scrings` is a strings utility that will output only semantically valid strings based on tree-sitter grammar. For each script language we made a list of semantic nodes discriminant enough to detect the target language.
+
+
+## Install 
+
+`pyscrings` is available on PyPi:
+
+```
+pip install pyscrings
+```
+
 ## Usage
 
 ```
@@ -28,10 +39,12 @@ with open("path_to_dump", "rb") as f:
 `pyscrings` is powered by [`maturin`](https://github.com/PyO3/maturin)
 
 ```
-git clone 
+git clone https://github.com/airbus-cert/scrings
 cd scrings\pyscrings
 
 pip install maturin
-maturin build
+maturin build --profile release
+
+pip install target\wheels\*.whl
 
 ```

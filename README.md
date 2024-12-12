@@ -34,8 +34,14 @@ scrings --path [PATH_TO_DUMP] -o -l powershell
 
 ## Build
 
-`scrings` is made in Rust 🦀. To built `scrings` you must rely on `cargo` :
+`scrings` is made in Rust 🦀.
+
+⚠️ Use nightly version of Rust ⚠️
+
+To built `scrings` you must rely on `cargo` :
 
 ```
+git clone https://github.com/airbus-cert/scrings
+cd scrings
 cargo build --package scrings --bin scrings --features=scrings
 ```

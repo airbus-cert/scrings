@@ -15,6 +15,10 @@ Semantic scanner base on [`tree-sitter`](https://tree-sitter.github.io/tree-sitt
 # Install
 ⚠️ To use this plugin you must install `pyscrings` in the same python env of `volatility` ⚠️
 
+```
+pip install pyscrings
+```
+
 ## ScringsScan
 
 `ScringsScan` plugin will scan the kernel memory using semantic backend and only match semantic valid strings depending on the language choose.
