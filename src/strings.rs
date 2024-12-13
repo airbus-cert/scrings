@@ -120,8 +120,10 @@ pub fn next_strings<T: Read + Seek, U: Decode + Into<u64> + Copy>(buf: &mut T, s
             let mut position = cursor;
             for i in (0..increment).step_by(size_of::<U>()).rev() {
                 // find non printable !
-                if !is_printable(U::from_bytes(&buffer[i..(i + size_of::<U>())])?.into()) {
-                    position -= (increment - (i + size_of::<U>())) as u64;
+                if is_printable(U::from_bytes(&buffer[i..(i + size_of::<U>())])?.into()) {
+                    position -= size_of::<U>() as u64;
+                }
+                else {
                     break;
                 }
             }
