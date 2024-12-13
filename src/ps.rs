@@ -22,7 +22,7 @@ fn build_powershell_tree(source: &str) -> Result<Tree> {
 pub struct Powershell;
 
 impl Parser for Powershell {
-    fn parse(&mut self, src: &str) -> Result<Option<String>> {
+    fn parse(&mut self, src: &str) -> Result<Option<(u64, String)>> {
         let tree = build_powershell_tree(src)?;
         let mut detection_rule = (
             LanguageVisitor::new(|c| {
@@ -54,7 +54,11 @@ impl Parser for Powershell {
         Ok(
 
             if detection_rule.0.is_matched || detection_rule.1.is_command {
-                Some(String::from(&src[start.unwrap_or(0)..end.unwrap_or(src.len())]))
+                Some((
+                    start.unwrap_or(0) as u64,
+                    String::from(&src[start.unwrap_or(0)..end.unwrap_or(src.len())]
+                    )
+                ))
             }
             else {
                 None

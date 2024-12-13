@@ -1,6 +1,6 @@
 [package]
 name = "scrings"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2021"
 license = "MIT"
 repository = "https://github.com/airbus-cert/scrings"

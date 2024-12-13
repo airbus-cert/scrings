@@ -4,15 +4,15 @@ use crate::error::Result;
 use crate::strings::{Decode, StringsIterator};
 
 pub trait Parser {
-    fn parse(&mut self, src: &str) -> Result<Option<String>>;
+    fn parse(&mut self, src: &str) -> Result<Option<(u64, String)>>;
 }
 
 pub trait Parsable {
-    fn is<P: Parser + Default>(&self) -> Result<Option<String>>;
+    fn is<P: Parser + Default>(&self) -> Result<Option<(u64, String)>>;
 }
 
 impl Parsable for String {
-    fn is<P: Parser + Default>(&self) -> Result<Option<String>> {
+    fn is<P: Parser + Default>(&self) -> Result<Option<(u64, String)>> {
         P::default().parse(self.as_str())
     }
 }
@@ -36,8 +36,8 @@ impl<T: Read + Seek, U: Decode + Into<u64> + Copy, P: Parser + Default> Iterator
 
     fn next(&mut self) -> Option<Self::Item> {
         while let Some((position, s)) = self.strings_iterator.next() {
-            if let Some(result) = s.is::<P>().unwrap_or(None) {
-                return Some((position, result));
+            if let Some((offset, result)) = s.is::<P>().unwrap_or(None) {
+                return Some((position + offset, result));
             }
         }
         None

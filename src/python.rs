@@ -18,7 +18,7 @@ fn build_python_tree(source: &str) -> crate::error::Result<Tree> {
 pub struct Python;
 
 impl Parser for Python {
-    fn parse(&mut self, src: &str) -> crate::error::Result<Option<String>> {
+    fn parse(&mut self, src: &str) -> crate::error::Result<Option<(u64, String)>> {
         let tree = build_python_tree(src)?;
 
         let mut detection_rule = LanguageVisitor::new(|c| {
@@ -38,7 +38,14 @@ impl Parser for Python {
         tree.apply(&mut detection_rule)?;
 
         if detection_rule.is_matched {
-            Ok(Some(String::from(&src[detection_rule.start.unwrap_or(0)..detection_rule.end.unwrap_or(src.len())])))
+            Ok(
+                Some(
+                    (
+                        detection_rule.start.unwrap_or(0) as u64,
+                        String::from(&src[detection_rule.start.unwrap_or(0)..detection_rule.end.unwrap_or(src.len())])
+                    )
+                )
+            )
         }
         else {
             Ok(None)
