@@ -6,11 +6,33 @@ Semantic scanner based on [`tree-sitter`](https://tree-sitter.github.io/tree-sit
 
 Python bindings are available in the `pyscrings` package.
 
-A Volatility 3 plugin is also available to leverage memory dump analysis.
+A [volatility](./volatility) 3 plugin is also available to leverage memory dump analysis.
 
 ## Usage
 
 `scrings` is available through a command line utility like `strings`:
+
+```
+scrings 0.1.0
+Airbus CERT <cert@airbus.com>
+
+USAGE:
+    scrings.exe [FLAGS] [OPTIONS] [bash]
+
+FLAGS:
+        --escape     Escape string before print
+    -h, --help       Prints help information
+    -o, --offset     Print offset in file
+    -V, --version    Prints version information
+
+OPTIONS:
+    -l, --language <language>    Language to match [possible values: powershell, bash, python, sql, javascript, php]
+    -p, --path <path>            Path to the script file
+    -s, --step <step>            Min length [default: 20]
+
+ARGS:
+    <bash>    bash
+```
 
 ```
 scrings --path [PATH_TO_DUMP] -o -l powershell
@@ -20,7 +42,13 @@ scrings --path [PATH_TO_DUMP] -o -l powershell
 ...
 ```
 
-`scrings` is also available through a [volatility](./volatility) plugin to leverage memory analysis technics.
+## Install 
+
+`scrings` is available on crates.io:
+
+```
+cargo install scrings --features="scrings"
+```
 
 ## Supported languages
 
