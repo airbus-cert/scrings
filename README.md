@@ -47,7 +47,7 @@ scrings --path [PATH_TO_DUMP] -o -l powershell
 `scrings` is available on crates.io:
 
 ```
-cargo install scrings --features="scrings"
+cargo +nightly install scrings --features="scrings"
 ```
 
 ## Supported languages
