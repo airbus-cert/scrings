@@ -30,7 +30,7 @@ impl Parser for Python {
                 "decorated_definition" | "match_statement" |
                 "future_import_statement" | "import_from_statement" |
                 "assert_statement" | "raise_statement" |
-                "pass_statement" | "exec_statement"
+                "pass_statement" | "exec_statement" | "import_statement"
             )
         }
         );

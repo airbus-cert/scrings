@@ -1,6 +1,6 @@
 [package]
 name = "scrings"
-version = "0.1.5"
+version = "0.1.6"
 edition = "2021"
 license = "MIT"
 repository = "https://github.com/airbus-cert/scrings"
@@ -25,7 +25,7 @@ scrings = ["clap"]
 
 [dependencies]
 tree-sitter = "0.24.4"
-tree-sitter-powershell = "0.24.4"
+tree-sitter-powershell = "0.24.5"
 tree-sitter-bash = "0.21.0"
 tree-sitter-python = "0.21.0"
 tree-sitter-sequel = "0.3.2"

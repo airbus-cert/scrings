@@ -47,7 +47,7 @@ fn decode_until_null_byte<T: Read + Seek, U: Decode + Into<u64> + Copy>(stream: 
 
         for i in (0..1024).step_by(size_of::<U>()) {
             let tmp_char = U::from_bytes(&buffer[i..(i + size_of::<U>())])?;
-            if tmp_char.into() == 0 {
+            if !is_printable(tmp_char.into()) {
                 find_null_term = true;
                 break;
             }
