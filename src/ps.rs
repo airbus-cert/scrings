@@ -124,7 +124,7 @@ impl<'a> Rule<'a> for IsPowershellCmd  {
                         Some((&"wait", _)) | Some((&"block", _)) | Some((&"grant", _)) |
                         Some((&"protect", _)) | Some((&"revoke", _)) | Some((&"unblock", _)) |
                         Some((&"unprotect", _)) => {
-                            self.start = Some(min(self.end.unwrap_or(node.start_abs()), node.start_abs()));
+                            self.start = Some(min(self.start.unwrap_or(node.start_abs()), node.start_abs()));
                             self.end = Some(max(self.end.unwrap_or(node.end_abs()), node.end_abs()));
                             self.is_command = true;
                         },
