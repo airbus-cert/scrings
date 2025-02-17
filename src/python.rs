@@ -43,25 +43,43 @@ impl Parser for Python {
                         | "import_statement"
                 )
             }),
+            IsPythonSubscript::new(),
             IsPythonFunction::new(),
         );
 
         tree.apply(&mut detection_rule)?;
 
-        let start = match (detection_rule.0.start, detection_rule.1.start) {
-            (None, None) => None,
-            (None, Some(x)) | (Some(x), None) => Some(x),
-            (Some(x), Some(y)) => Some(min(x, y)),
+        let start = match (
+            detection_rule.0.start,
+            detection_rule.1.start,
+            detection_rule.2.start,
+        ) {
+            (None, None, None) => None,
+            (None, Some(x), None) | (Some(x), None, None) | (None, None, Some(x)) => Some(x),
+            (Some(x), Some(y), None) | (Some(x), None, Some(y)) | (None, Some(x), Some(y)) => {
+                Some(min(x, y))
+            }
+            (Some(x), Some(y), Some(z)) => Some(min(min(x, y), z)),
         };
 
-        let end = match (detection_rule.0.end, detection_rule.1.end) {
-            (None, None) => None,
-            (None, Some(x)) | (Some(x), None) => Some(x),
-            (Some(x), Some(y)) => Some(max(x, y)),
+        let end = match (
+            detection_rule.0.end,
+            detection_rule.1.end,
+            detection_rule.2.end,
+        ) {
+            (None, None, None) => None,
+            (None, Some(x), None) | (Some(x), None, None) | (None, None, Some(x)) => Some(x),
+            (Some(x), Some(y), None) | (Some(x), None, Some(y)) | (None, Some(x), Some(y)) => {
+                Some(max(x, y))
+            }
+            (Some(x), Some(y), Some(z)) => Some(max(max(x, y), z)),
         };
 
         Ok(
-            if detection_rule.0.is_matched || detection_rule.1.is_function {
+            if detection_rule.0.is_matched
+                || detection_rule.1.is_subscript
+                || detection_rule.2.is_function
+            {
                 Some((
                     start.unwrap_or(0) as u64,
                     String::from(&src[start.unwrap_or(0)..end.unwrap_or(src.len())]),
@@ -70,6 +88,93 @@ impl Parser for Python {
                 None
             },
         )
+    }
+}
+
+pub struct IsPythonSubscript {
+    is_subscript: bool,
+    start: Option<usize>,
+    end: Option<usize>,
+    stack: Vec<bool>,
+}
+
+impl IsPythonSubscript {
+    pub fn new() -> Self {
+        Self {
+            is_subscript: false,
+            start: None,
+            end: None,
+            stack: vec![true],
+        }
+    }
+
+    pub fn verify(node: &Node) -> bool {
+        match node.kind() {
+            "subscript" => {
+                if node.child_count() == 4
+                    && node.child(1).unwrap().kind() == "["
+                    && node.child(3).unwrap().kind() == "]"
+                {
+                    if let Some(right) = node.child(2) {
+                        if right.kind() == "slice" {
+                            return true;
+                        }
+                    }
+                }
+            }
+            _ => (),
+        }
+        false
+    }
+}
+
+impl<'a> Rule<'a> for IsPythonSubscript {
+    // Match python slice
+    // Verify if the parent is subscript
+    // Assert all the children of the parent are valid python nodes
+    fn enter(&mut self, node: &Node<'a>) -> Result<bool> {
+        if IsPythonSubscript::verify(node) {
+            self.is_subscript = true;
+            self.stack.push(true);
+
+            self.start = Some(min(
+                self.start.unwrap_or(node.start_abs()),
+                node.start_abs(),
+            ));
+            self.end = Some(max(self.end.unwrap_or(node.end_abs()), node.end_abs()));
+        }
+        Ok(true)
+    }
+
+    fn leave(&mut self, node: &Node<'a>) -> Result<()> {
+        if node.kind() == "ERROR" || node.text()? == "" {
+            for c in self.stack.iter_mut() {
+                *c = false;
+            }
+        }
+
+        if node.child_count() > 1 {
+            if IsPythonSubscript::verify(node) {
+                if self.stack.pop().unwrap_or(false) {
+                    self.start = Some(min(
+                        self.start.unwrap_or(node.start_abs()),
+                        node.start_abs(),
+                    ));
+                    self.end = Some(max(self.end.unwrap_or(node.end_abs()), node.end_abs()));
+                    self.is_subscript = true;
+                }
+            }
+        }
+
+        if self.is_subscript && self.stack.last() == Some(&true) {
+            self.start = Some(min(
+                self.start.unwrap_or(node.start_abs()),
+                node.start_abs(),
+            ));
+            self.end = Some(max(self.end.unwrap_or(node.end_abs()), node.end_abs()));
+        }
+
+        Ok(())
     }
 }
 
