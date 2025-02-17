@@ -1,6 +1,6 @@
 use std::array::TryFromSliceError;
 use std::char::DecodeUtf16Error;
-use std::io::{Error as IoError};
+use std::io::Error as IoError;
 use std::result;
 use std::str::Utf8Error;
 use std::string::FromUtf8Error;

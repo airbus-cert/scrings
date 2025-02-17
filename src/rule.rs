@@ -1,6 +1,5 @@
-use crate::tree::{Node};
 use crate::error::Result;
-
+use crate::tree::Node;
 
 /// Rule that will not change the node component
 /// Use for displaying or statistic

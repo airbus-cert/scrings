@@ -3,10 +3,12 @@ use std::io::{Read, Seek, SeekFrom};
 use std::marker::PhantomData;
 use std::result::Result as StdResult;
 
-
 pub type Utf16le = u16;
 
-pub trait Decode where Self: Sized {
+pub trait Decode
+where
+    Self: Sized,
+{
     fn from_bytes(value: &[u8]) -> Result<Self>;
     fn from_vec(buf: Vec<Self>) -> Result<String>;
 }
@@ -31,13 +33,13 @@ impl Decode for u8 {
     }
 }
 
-
 fn is_printable(c: u64) -> bool {
     c == 0xd || c == 0xa || (c >= 0x20 && c <= 0x7e)
 }
 
-fn decode_until_null_byte<T: Read + Seek, U: Decode + Into<u64> + Copy>(stream: &mut T) -> Result<String> {
-
+fn decode_until_null_byte<T: Read + Seek, U: Decode + Into<u64> + Copy>(
+    stream: &mut T,
+) -> Result<String> {
     let position = stream.seek(SeekFrom::Current(0))?;
     let mut find_null_term = false;
     let mut result = vec![];
@@ -56,22 +58,24 @@ fn decode_until_null_byte<T: Read + Seek, U: Decode + Into<u64> + Copy>(stream: 
         }
     }
 
-    stream.seek(SeekFrom::Start(position + (size_of::<U>() as u64)*(result.len() as u64)))?;
+    stream.seek(SeekFrom::Start(
+        position + (size_of::<U>() as u64) * (result.len() as u64),
+    ))?;
     U::from_vec(result)
 }
 
 pub struct StringsIterator<T: Read + Seek, U> {
     buffer: T,
     step: usize,
-    encoding: PhantomData<U>
+    encoding: PhantomData<U>,
 }
 
 impl<T: Read + Seek, U> StringsIterator<T, U> {
-    pub fn new(buffer: T, step: usize) -> Self{
+    pub fn new(buffer: T, step: usize) -> Self {
         Self {
             buffer,
             step,
-            encoding: PhantomData
+            encoding: PhantomData,
         }
     }
 }
@@ -84,7 +88,10 @@ impl<'a, T: Read + Seek, U: Decode + Into<u64> + Copy> Iterator for StringsItera
     }
 }
 
-pub fn next_strings<T: Read + Seek, U: Decode + Into<u64> + Copy>(buf: &mut T, step: usize) -> Result<(u64, String)> {
+pub fn next_strings<T: Read + Seek, U: Decode + Into<u64> + Copy>(
+    buf: &mut T,
+    step: usize,
+) -> Result<(u64, String)> {
     let increment = step * size_of::<U>();
     let mut cursor;
     loop {
@@ -106,7 +113,6 @@ pub fn next_strings<T: Read + Seek, U: Decode + Into<u64> + Copy>(buf: &mut T, s
         }
 
         if find_printable {
-
             // my cursor is the current minus the one matched
             cursor = buf.seek(SeekFrom::Current(0))? - size_of::<U>() as u64;
 
@@ -122,8 +128,7 @@ pub fn next_strings<T: Read + Seek, U: Decode + Into<u64> + Copy>(buf: &mut T, s
                 // find non printable !
                 if is_printable(U::from_bytes(&buffer[i..(i + size_of::<U>())])?.into()) {
                     position -= size_of::<U>() as u64;
-                }
-                else {
+                } else {
                     break;
                 }
             }
@@ -132,7 +137,7 @@ pub fn next_strings<T: Read + Seek, U: Decode + Into<u64> + Copy>(buf: &mut T, s
 
             if let Ok(str) = decode_until_null_byte::<T, U>(buf) {
                 if str.len() > step {
-                    return Ok((position, str))
+                    return Ok((position, str));
                 }
             }
         }
@@ -140,7 +145,9 @@ pub fn next_strings<T: Read + Seek, U: Decode + Into<u64> + Copy>(buf: &mut T, s
 }
 
 pub trait IterUtf16leStrings {
-    fn iter_utf16le_strings(self, step: usize) -> StringsIterator<Self, Utf16le> where Self: Read + Seek + Sized;
+    fn iter_utf16le_strings(self, step: usize) -> StringsIterator<Self, Utf16le>
+    where
+        Self: Read + Seek + Sized;
 }
 
 impl<T: Read + Seek> IterUtf16leStrings for T {
@@ -150,7 +157,9 @@ impl<T: Read + Seek> IterUtf16leStrings for T {
 }
 
 pub trait IterStrings {
-    fn iter_strings(self, step: usize) -> StringsIterator<Self, u8> where Self: Read + Seek + Sized;
+    fn iter_strings(self, step: usize) -> StringsIterator<Self, u8>
+    where
+        Self: Read + Seek + Sized;
 }
 
 impl<T: Read + Seek> IterStrings for T {

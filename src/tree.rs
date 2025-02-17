@@ -1,6 +1,6 @@
+use crate::error::Result;
+use crate::rule::Rule;
 use tree_sitter::{Node as TreeNode, Tree as TreeSitter};
-use crate::rule::{Rule};
-use crate::error::{Result};
 use tree_sitter_traversal2::{traverse, Order};
 
 /// A node view use to explore the tree
@@ -9,7 +9,7 @@ pub struct Node<'a> {
     /// The inner tree-sitter node
     node: TreeNode<'a>,
     /// Source reference
-    source: &'a [u8]
+    source: &'a [u8],
 }
 
 /// Two nodes are equals if they have the same node id
@@ -21,10 +21,7 @@ impl<'a> PartialEq for Node<'a> {
 
 impl<'a> Node<'a> {
     pub fn new(node: TreeNode<'a>, source: &'a [u8]) -> Self {
-        Self {
-            node,
-            source
-        }
+        Self { node, source }
     }
 
     pub fn child(&self, index: usize) -> Option<Node<'a>> {
@@ -32,24 +29,26 @@ impl<'a> Node<'a> {
     }
 
     pub fn named_child(&self, index: &str) -> Option<Node<'a>> {
-        self.node.child_by_field_name(index).map(|node| Node::new(node, self.source))
+        self.node
+            .child_by_field_name(index)
+            .map(|node| Node::new(node, self.source))
     }
 
     pub fn iter(&self) -> NodeIterator<'a> {
-        NodeIterator::new(
-            Self::new(self.node, self.source),
-            0,
-            None,
-            1
-        )
+        NodeIterator::new(Self::new(self.node, self.source), 0, None, 1)
     }
 
-    pub fn range(&self, start: Option<usize>, end: Option<usize>, gap: Option<usize>) -> NodeIterator<'a> {
+    pub fn range(
+        &self,
+        start: Option<usize>,
+        end: Option<usize>,
+        gap: Option<usize>,
+    ) -> NodeIterator<'a> {
         NodeIterator::new(
             Self::new(self.node, self.source),
             start.unwrap_or(0),
             end,
-            gap.unwrap_or(1)
+            gap.unwrap_or(1),
         )
     }
 
@@ -80,14 +79,13 @@ impl<'a> Node<'a> {
     pub fn child_count(&self) -> usize {
         self.node.child_count()
     }
-    pub fn text(&self) -> Result<&str>{
+    pub fn text(&self) -> Result<&str> {
         Ok(self.node.utf8_text(self.source)?)
     }
 
     pub fn parent(&self) -> Option<Node<'a>> {
         self.node.parent().map(|node| Self::new(node, self.source))
     }
-
 
     pub fn get_parent_of_types(&self, kinds: Vec<&str>) -> Option<Node<'a>> {
         let mut current = self.parent();
@@ -97,8 +95,7 @@ impl<'a> Node<'a> {
                     return Some(current_node);
                 }
                 current = current_node.parent();
-            }
-            else {
+            } else {
                 return None;
             }
         }
@@ -107,7 +104,7 @@ impl<'a> Node<'a> {
     fn apply(&self, rule: &mut impl Rule<'a>) -> Result<()> {
         let mut is_visiting = true;
         // Stack use to call 'leave' method when all children are handled
-        let mut stack:Vec<(TreeNode, usize, bool)> = vec![];
+        let mut stack: Vec<(TreeNode, usize, bool)> = vec![];
 
         for node in traverse(self.node.walk(), Order::Pre) {
             stack.push((node, node.child_count(), is_visiting));
@@ -145,23 +142,22 @@ impl<'a> Node<'a> {
         }
         Ok(())
     }
-
 }
 
 pub struct NodeIterator<'a> {
     inner: Node<'a>,
     index: usize,
     end: Option<usize>,
-    gap : usize
+    gap: usize,
 }
 
 impl<'a> NodeIterator<'a> {
-    fn new(node: Node<'a>, start: usize, end: Option<usize>, gap: usize) -> Self{
+    fn new(node: Node<'a>, start: usize, end: Option<usize>, gap: usize) -> Self {
         Self {
             inner: node,
-            index : start,
+            index: start,
             end,
-            gap
+            gap,
         }
     }
 }
@@ -180,21 +176,21 @@ impl<'a> Iterator for NodeIterator<'a> {
             Some(node) => {
                 self.index += self.gap;
                 Some(node)
-            },
-            None => None
+            }
+            None => None,
         }
     }
 }
 pub struct Tree<'a> {
     tree_sitter: TreeSitter,
-    source: &'a[u8]
+    source: &'a [u8],
 }
 
 impl<'a> Tree<'a> {
-    pub fn new(source: &'a[u8], tree_sitter: TreeSitter) -> Self {
+    pub fn new(source: &'a [u8], tree_sitter: TreeSitter) -> Self {
         Self {
             tree_sitter,
-            source
+            source,
         }
     }
 
