@@ -134,7 +134,6 @@ impl<'a> Rule<'a> for IsPythonSubscript {
     // Assert all the children of the parent are valid python nodes
     fn enter(&mut self, node: &Node<'a>) -> Result<bool> {
         if IsPythonSubscript::verify(node) {
-            self.is_subscript = true;
             self.stack.push(true);
 
             self.start = Some(min(
