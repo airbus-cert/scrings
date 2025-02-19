@@ -206,6 +206,9 @@ impl<'a> Rule<'a> for IsPythonFunction {
                             | "os.system"
                             | "base64.b64decode"
                             | "b64decode"
+                            | "subprocess.run"
+                            | "subprocess.Popen"
+                            | "subprocess.call"
                     ) {
                         self.is_function = true;
                         self.start = Some(min(
