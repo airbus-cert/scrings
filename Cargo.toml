@@ -1,6 +1,6 @@
 [package]
 name = "scrings"
-version = "0.1.6"
+version = "0.1.7"
 edition = "2021"
 license = "MIT"
 repository = "https://github.com/airbus-cert/scrings"
@@ -31,7 +31,7 @@ tree-sitter-python = "0.21.0"
 tree-sitter-sequel = "0.3.2"
 tree-sitter-javascript = "0.23.1"
 tree-sitter-php = "0.23.11"
-clap = { version = "^2.33", optional = true}
+clap = { version = "^2.33", optional = true }
 encode_unicode = "1.0.0"
 tree-sitter-traversal2 = "0.2.0"
 itertools = "0.13.0"

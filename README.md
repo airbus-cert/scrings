@@ -13,7 +13,7 @@ A [volatility](./volatility) 3 plugin is also available to leverage memory dump 
 `scrings` is available through a command line utility like `strings`:
 
 ```
-scrings 0.1.0
+scrings 0.1.7
 Airbus CERT <cert@airbus.com>
 
 USAGE:
@@ -42,7 +42,7 @@ scrings --path [PATH_TO_DUMP] -o -l powershell
 ...
 ```
 
-## Install 
+## Install
 
 `scrings` is available on crates.io:
 

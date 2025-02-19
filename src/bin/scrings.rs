@@ -14,7 +14,7 @@ const APPLICATION_NAME: &str = "scrings";
 
 fn main() {
     let matches = App::new(APPLICATION_NAME)
-        .version("0.1.0")
+        .version("0.1.7")
         .author("Airbus CERT <cert@airbus.com>")
         .arg(
             Arg::with_name("path")
